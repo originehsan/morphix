@@ -1,9 +1,6 @@
-<div align="center">
-
 # morphix
 
-### A premium animated async button for Flutter
-**One widget. One job. The full button lifecycle — beautifully.**
+A premium animated async button for Flutter. Spring physics, particle burst, neon glow, and gradient styles — all in one widget.
 
 ![morphix demo](https://raw.githubusercontent.com/originehsan/morphix/main/assets/morphix-ezgif.com-video-to-gif-converter.gif)
 
@@ -12,27 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](LICENSE)
 [![Flutter](https://img.shields.io/badge/Flutter-%E2%89%A53.10-02569B?logo=flutter)](https://flutter.dev)
 
-</div>
-
----
-
-## Table of Contents
-
-- [The Problem](#-the-problem)
-- [Installation](#-installation)
-- [Quick Start](#-quick-start)
-- [Styles](#-styles)
-- [Animations](#-animations)
-- [Features](#-features)
-- [API Reference](#-api-reference)
-- [Accessibility](#-accessibility)
-- [Production Safety](#-production-safety)
-- [Architecture](#-architecture)
-- [Roadmap](#-roadmap)
-
----
-
-## The Problem
+## The problem
 
 Every async button in every Flutter app has the same bug waiting to happen:
 
@@ -45,7 +22,7 @@ bool isError = false;
 // ship a bug
 ```
 
-**morphix eliminates this pattern entirely.**
+morphix kills this pattern entirely:
 
 ```dart
 Morphix(
@@ -54,28 +31,14 @@ Morphix(
 )
 ```
 
-That's it. **morphix owns the entire lifecycle.**
-
----
-
 ## Installation
-
-Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
   morphix: ^1.0.0
 ```
 
-Then run:
-
-```bash
-flutter pub get
-```
-
----
-
-## Quick Start
+## Quick start
 
 ```dart
 import 'package:morphix/morphix.dart';
@@ -91,14 +54,9 @@ Morphix(
 )
 ```
 
----
+## 4 Styles
 
-## Styles
-
-Choose the perfect style for your use case:
-
-### Filled
-Solid color, universal call-to-action button.
+**Filled** — solid color, universal CTA
 
 ```dart
 Morphix(
@@ -110,8 +68,7 @@ Morphix(
 )
 ```
 
-### Outlined
-Border only, ideal for secondary actions.
+**Outlined** — border only, secondary action
 
 ```dart
 Morphix(
@@ -123,8 +80,7 @@ Morphix(
 )
 ```
 
-### Neon
-Glowing border with breathing pulse animation on idle state.
+**Neon** — glowing border, breathing pulse on idle
 
 ```dart
 Morphix(
@@ -136,8 +92,7 @@ Morphix(
 )
 ```
 
-### Gradient
-Two-color gradient that rotates dynamically during loading.
+**Gradient** — two-color gradient that rotates during loading
 
 ```dart
 Morphix(
@@ -153,42 +108,34 @@ Morphix(
 )
 ```
 
----
+## 7 Animations
 
-## Animations
+Animation | Description
+--- | ---
+Liquid collapse | Width spring leads, radius follows. Center-bulge before snapping. Real `SpringSimulation` — not easing curves.
+Rotating gradient arc | Gradient spins inside circle during loading. Gradient style only.
+Stroke checkmark | Draws in two segments via `CustomPainter`. Not an icon. Not a fade-in. It draws.
+Particle burst | 12 brand-color dots explode when checkmark finishes. Fade as they fly.
+iOS shake | Three decaying oscillations on error. Auto-resets to idle.
+Press scale | 96% on finger down, springs back on release. 80ms response.
+Shadow bloom | Glow pulse on neon idle and during loading.
 
-Seven world-class animations crafted with physics-based spring simulations:
+## Progress mode
 
-| Animation | Description |
-|---|---|
-| **Liquid collapse** | Width spring leads, radius spring follows. Center-bulge before snapping to circle. Real `SpringSimulation` — not easing curves. |
-| **Rotating gradient arc** | Gradient spins inside the circle during loading. *(Gradient style only)* |
-| **Stroke checkmark** | Draws in two segments via `CustomPainter`. Not an icon. Not a fade-in. **It draws.** |
-| **Particle burst** | 12 brand-color dots explode when checkmark finishes. Fade to zero as they fly. |
-| **iOS shake** | Three decaying oscillations on error. Auto-resets to idle. |
-| **Press scale** | 96% on finger down, springs back on release. 80ms response. |
-| **Shadow bloom** | Glow pulse on neon idle and during loading. |
-
----
-
-## Features
-
-### Progress Mode
-
-Perfect for uploads, downloads, and AI generation flows:
+For uploads, downloads, and AI generation flows:
 
 ```dart
 final ctrl = MorphixController();
 
 void upload() {
-  double progress = 0.0;
+  double p = 0.0;
   Timer.periodic(Duration(milliseconds: 80), (t) {
-    progress += 0.02;
-    if (progress >= 1.0) {
+    p += 0.02;
+    if (p >= 1.0) {
       t.cancel();
       ctrl.success();
     } else {
-      ctrl.setProgress(progress);
+      ctrl.setProgress(p);
     }
   });
 }
@@ -204,9 +151,9 @@ Morphix(
 )
 ```
 
-### External Controller
+## External controller
 
-Seamlessly integrate with **Riverpod**, **Bloc**, **GetX**, **MVVM**, or any state manager:
+Works with Riverpod, Bloc, GetX, MVVM:
 
 ```dart
 final ctrl = MorphixController();
@@ -218,19 +165,11 @@ ref.listen(paymentProvider, (_, next) {
   if (next.hasError)  ctrl.error();
 });
 
-// Bloc
-BlocListener<PaymentBloc, PaymentState>(
-  listener: (context, state) {
-    if (state is PaymentLoading) ctrl.loading();
-    if (state is PaymentSuccess) ctrl.success();
-    if (state is PaymentFailure) ctrl.error();
-  },
-  child: Morphix(
-    label: 'Pay',
-    onTap: null,
-    controller: ctrl,
-    color: Color(0xFF2563EB),
-  ),
+Morphix(
+  label: 'Pay',
+  onTap: null,
+  controller: ctrl,
+  color: Color(0xFF2563EB),
 )
 
 // Always dispose
@@ -241,11 +180,7 @@ void dispose() {
 }
 ```
 
----
-
-## API Reference
-
-### Controller API
+## Controller API
 
 ```dart
 ctrl.loading()          // → loading state
@@ -255,13 +190,10 @@ ctrl.reset()            // → idle state
 ctrl.disable()          // → disabled state
 ctrl.enable()           // → idle state
 ctrl.setProgress(0.65)  // → determinate progress arc
-
-ctrl.state              // current MorphixState
-ctrl.isDisposed         // safety check
 ctrl.dispose()          // always call in dispose()
 ```
 
-### Full Widget API
+## Full API
 
 ```dart
 Morphix(
@@ -321,50 +253,26 @@ Morphix(
 )
 ```
 
-### Spring Presets
-
-Five physics-based spring presets for perfect feel:
-
-| Preset | Character | Best For |
-|---|---|---|
-| **standard** | Balanced — good default | General purpose |
-| **snappy** | Fast and tight | Productivity apps |
-| **cinematic** | Slow and weighted | Luxury apps |
-| **bouncy** | Playful overshoot | Consumer apps |
-| **follow** | Soft chase | Radius spring animations |
+## Spring presets
 
 ```dart
-// Snappy feel — productivity
-Morphix(
-  label: 'Continue',
-  onTap: onTap,
-  color: Color(0xFF18181B),
-  widthSpring: MorphixSprings.snappy,
-  radiusSpring: MorphixSprings.snappy,
-)
-
-// Cinematic feel — premium
-Morphix(
-  label: 'Upgrade to Pro',
-  onTap: onTap,
-  style: MorphixStyle.gradient,
-  color: Color(0xFF2563EB),
-  gradientColors: [Color(0xFF2563EB), Color(0xFF0D9488)],
-  widthSpring: MorphixSprings.cinematic,
-  radiusSpring: MorphixSprings.cinematic,
-)
+MorphixSprings.standard   // balanced — good default
+MorphixSprings.snappy     // fast and tight — productivity apps
+MorphixSprings.cinematic  // slow and weighted — luxury apps
+MorphixSprings.bouncy     // playful overshoot — consumer apps
+MorphixSprings.follow     // soft chase — ideal for radius spring
 ```
-
----
 
 ## Accessibility
 
-**morphix is fully accessible out of the box.**
+- Keyboard navigation — Tab to focus, Enter or Space to activate
 
-- Keyboard navigation — `Tab` to focus, `Enter` or `Space` to activate
 - Screen reader announcements on every state change
+
 - Semantics labels updated per state — idle, loading, success, error, disabled
+
 - Reduced motion — respects `MediaQuery.disableAnimations`
+
 - Localization ready — custom labels for any language
 
 ```dart
@@ -378,68 +286,28 @@ Morphix(
 )
 ```
 
----
+## Production safety
 
-## Architecture
+12 vulnerabilities fixed before v1.0.0:
 
-Clean, modular architecture with **zero external dependencies** — just Flutter SDK.
+# | Vulnerability | Fix
+--- | --- | ---
+1 | Rapid multi-tap | `_isBusy` guard before first `await`
+2 | setState after dispose | `_isDisposed` + `mounted` check
+3 | Synchronous throw | `Future.microtask()` wraps `onTap`
+4 | AnimationController after dispose | All disposed atomically
+5 | onTap null | Silent no-op
+6 | Controller after dispose | `_disposed` guard
+7 | successDuration zero | Clamped to 500ms
+8 | Controller swapped on rebuild | `didUpdateWidget` re-wires
+9 | Screen rotation stale width | `LayoutBuilder` every build
+10 | Timer after dispose | Cancelled in dispose
+11 | RTL languages | Directionality-agnostic
+12 | Long label overflow | ellipsis + padding
 
-```text
-lib/
-├── morphix.dart                       ← public API, 5 export lines
-└── src/
-    ├── core/
-    │   ├── morphix_state.dart         ← state enum
-    │   ├── morphix_constants.dart     ← all magic numbers
-    │   └── morphix_controller.dart    ← external driver
-    ├── model/
-    │   ├── morphix_style.dart         ← style enum
-    │   ├── morphix_icon_position.dart ← icon position enum
-    │   └── particle.dart              ← particle data model
-    ├── theme/
-    │   └── morphix_theme.dart         ← pure static color resolution
-    ├── animation/
-    │   ├── morphix_animations.dart    ← owns all AnimationControllers
-    │   └── morphix_spring.dart        ← spring presets
-    ├── painter/
-    │   ├── checkmark_painter.dart
-    │   ├── spinner_painter.dart
-    │   ├── gradient_painter.dart
-    │   └── particle_painter.dart
-    └── widgets/
-        ├── morphix_button.dart        ← state machine + lifecycle
-        ├── morphix_button_tap.dart    ← tap + press + haptic
-        ├── morphix_button_content.dart
-        ├── morphix_button_decoration.dart
-        └── morphix_widget.dart        ← public Morphix widget
+## State machine
+
 ```
-
----
-
-## Production Safety
-
-**12 critical vulnerabilities fixed** before v1.0.0 release:
-
-| # | Vulnerability | Solution |
-|---|---|---|
-| 1 | Rapid multi-tap launches parallel ops | `_isBusy` guard set before first `await` |
-| 2 | `setState` after dispose | `_isDisposed` flag + `mounted` check |
-| 3 | `onTap` throws synchronously | `Future.microtask()` wraps `onTap` |
-| 4 | `AnimationController` after dispose | `MorphixAnimations` disposes all atomically |
-| 5 | `onTap: null` without controller | Silent no-op — no crash |
-| 6 | Controller used after dispose | `_set()` guards `_disposed` flag |
-| 7 | `successDuration` zero or negative | Clamped to 500ms minimum |
-| 8 | Controller swapped on rebuild | `didUpdateWidget` re-wires listener |
-| 9 | Screen rotation stale width | `LayoutBuilder` captures every build |
-| 10 | Success timer fires post-dispose | `_successTimer?.cancel()` in dispose |
-| 11 | RTL languages | `Transform.translate` is directionality-agnostic |
-| 12 | Long label overflow | `maxLines: 1` + `TextOverflow.ellipsis` |
-
----
-
-## State Machine
-
-```text
 idle ──tap──────────────→ loading
 loading ──success──────→ success ──timer──→ idle
 loading ──throw────────→ error ──shake──→ idle
@@ -448,41 +316,15 @@ any ──controller──────→ any state
 disabled ──tap─────────→ nothing
 ```
 
----
-
 ## Roadmap
 
-| Version | Features |
-|---|---|
-| **v1.0** | Core async lifecycle, 4 styles, spring physics, particles, neon, gradient, progress mode, accessibility |
-| **v1.1** | `MorphixTheme` InheritedWidget, `MorphixStyle.glass`, `ctrl.setProgress()` improvements |
-| **v1.2** | Custom particle shapes, custom haptic patterns, `ctrl.successWithMessage()` |
-| **v2.0** | `interactix` kit — `MorphixLoader`, `MorphixCard`, `MorphixInput` |
-
----
-
-## Contributing
-
-We welcome PRs and issues! Please [open an issue](../../issues) before submitting large changes.
-
----
+Version | Features
+--- | ---
+v1.0 | Core lifecycle, 4 styles, spring physics, particles, neon, gradient, progress, accessibility
+v1.1 | MorphixTheme InheritedWidget, MorphixStyle.glass
+v1.2 | Custom particles, custom haptics
+v2.0 | interactix kit — MorphixLoader, MorphixCard, MorphixInput
 
 ## License
 
-MIT © 2025 — see [LICENSE](LICENSE)
-
----
-
-## Why "morphix"?
-
-A button that **morph**s through its lifecycle. Simple. Memorable. Available on pub.dev.
-
----
-
-<div align="center">
-
-**Made with care for Flutter developers**
-
-[Report Bug](../../issues) • [Request Feature](../../issues) • [View Docs](https://pub.dev/packages/morphix)
-
-</div>
+MIT © 2025
